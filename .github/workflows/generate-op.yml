@@ -1,0 +1,26 @@
+name: 'Create .op artifact'
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  generate-op:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Upload as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: slopware-alert.op
+        path: | 
+          *.as
+          info.toml
+          LICENSE
