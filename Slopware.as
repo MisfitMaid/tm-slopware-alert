@@ -29,6 +29,7 @@ namespace Slopware {
         Net::HttpRequest@ req = Net::HttpGet("https://api.openplanet.dev/plugin/"+plugin.SiteID);
 
         while (!req.Finished()) yield();
+        sleep(1000); // dont spam opdev xoxo
 
         if (req.ResponseCode() != 200 || req.String() == "null") return false;
 
@@ -36,7 +37,6 @@ namespace Slopware {
         if (resp.HasKey("genai")) {
             cache[key] = resp["genai"];
             Json::ToFile(IO::FromStorageFolder("cache.json"), cache, true);
-            sleep(1000); // dont spam opdev xoxo
             return cache[key];
         }
         return false;
